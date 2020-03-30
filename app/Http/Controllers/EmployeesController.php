@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Model\Employees;
 use App\Model\Companies;
+use App\Http\Requests\EmployeesStoreRequest;
 
 class EmployeesController extends Controller {
 
@@ -34,14 +35,7 @@ class EmployeesController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-        $validation = ['last_name' => 'required', 'company' => 'required'];
-        $validation['first_name'] = $request->id ? 'required|unique:employees,first_name,' . $request->id : 'required|unique:employees,first_name';
-        if (isset($request->email))
-            $validation['email'] = 'email';
-        if (isset($request->phone))
-            $validation['phone'] = 'numeric';
-        $request->validate($validation);
+    public function store(EmployeesStoreRequest $request) {
         $emp_data = array(
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class EmployeesStoreRequest extends FormRequest {
 
@@ -20,10 +21,14 @@ class EmployeesStoreRequest extends FormRequest {
      *
      * @return array
      */
-    public function rules() {
-        return [
-                //
-        ];
+    public function rules(Request $request) {
+        $validation = ['last_name' => 'required', 'company' => 'required'];
+        $validation['first_name'] = $request->id ? 'required|unique:employees,first_name,' . $request->id : 'required|unique:employees,first_name';
+        if (isset($request->email))
+            $validation['email'] = 'email';
+        if (isset($request->phone))
+            $validation['phone'] = 'numeric';
+        return $validation;
     }
 
 }

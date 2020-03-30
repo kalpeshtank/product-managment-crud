@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Model\Companies;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\CompaniesStoreRequest;
 
 class CompaniesController extends Controller {
 
@@ -33,17 +34,7 @@ class CompaniesController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-        $requestVal = [];
-        $requestVal['name'] = $request->id ? 'required|unique:companies,name,' . $request->id : 'required|unique:companies,name';
-        if (isset($request->email))
-            $requestVal['email'] = 'email';
-        if (isset($request->website))
-            $requestVal['website'] = 'regex:' . '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
-        if (!$request->id) {
-            $requestVal['logo'] = 'required|image|dimensions:min_width=100,min_height=100';
-        }
-        $request->validate($requestVal);
+    public function store(CompaniesStoreRequest $request) {
         if ($request->file('logo')) {
             $image = $request->file('logo');
             $new_name = Storage::disk('public')->put('', $image);
